@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panier — "nom du site"</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --cream:        #E6D8C3;
+      --off-white:    #F5F5F0;
+      --brown:        #4A3933;
+      --brown-light:  #7a6258;
+      --brown-faint:  rgba(74,57,51,0.08);
+      --brown-faint2: rgba(74,57,51,0.14);
+      --transition:   0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    html { scroll-behavior: smooth; }
+    body { background-color: var(--off-white); color: var(--brown); font-family: 'Jost', sans-serif; font-weight: 300; min-height: 100vh; }
+
+    nav { position: sticky; top: 0; z-index: 100; background: var(--off-white); border-bottom: 1px solid var(--brown-faint2); display: flex; align-items: center; justify-content: space-between; padding: 0 4rem; height: 72px; }
+    .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.55rem; font-weight: 600; letter-spacing: 0.08em; color: var(--brown); text-decoration: none; }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a { text-decoration: none; font-size: 0.78rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--brown-light); transition: color var(--transition); }
+    .nav-links a:hover { color: var(--brown); }
+    .nav-actions { display: flex; align-items: center; gap: 1.25rem; }
+    .nav-icon-btn { background: none; border: none; cursor: pointer; color: var(--brown); display: flex; align-items: center; padding: 4px; transition: opacity var(--transition); position: relative; }
+    .nav-icon-btn:hover { opacity: 0.6; }
+    .cart-badge { position: absolute; top: -4px; right: -6px; width: 16px; height: 16px; background: var(--brown); color: var(--off-white); font-size: 0.6rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 500; }
+
+    .page-wrap { max-width: 1280px; margin: 0 auto; padding: 0 4rem; }
+
+    .breadcrumb { padding: 1.8rem 0 0; display: flex; align-items: center; gap: 0.6rem; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brown-light); }
+    .breadcrumb a { color: var(--brown-light); text-decoration: none; transition: color var(--transition); }
+    .breadcrumb a:hover { color: var(--brown); }
+    .breadcrumb .sep { opacity: 0.4; }
+
+    .cart-header { padding: 2.5rem 0 2rem; border-bottom: 1px solid var(--brown-faint2); display: flex; align-items: flex-end; justify-content: space-between; }
+    .cart-header h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.4rem, 4vw, 3.5rem); font-weight: 300; line-height: 1; }
+    .cart-header-meta { font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brown-light); }
+
+    .cart-layout { display: grid; grid-template-columns: 1fr 360px; gap: 0; align-items: start; }
+
+    .cart-items { border-right: 1px solid var(--brown-faint2); padding-right: 3rem; padding-bottom: 4rem; }
+
+    .steps { display: flex; padding: 2rem 0 2.5rem; border-bottom: 1px solid var(--brown-faint2); }
+    .step { display: flex; align-items: center; gap: 0.7rem; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brown-light); flex: 1; }
+    .step.active { color: var(--brown); }
+    .step-num { width: 26px; height: 26px; border: 1px solid var(--brown-faint2); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 500; flex-shrink: 0; }
+    .step.active .step-num { background: var(--brown); color: var(--off-white); border-color: var(--brown); }
+    .step-arrow { color: var(--brown-faint2); margin: 0 0.8rem; font-size: 0.8rem; }
+
+    .cart-item { display: grid; grid-template-columns: 100px 1fr auto; gap: 1.6rem; padding: 2rem 0; border-bottom: 1px solid var(--brown-faint2); animation: fadeUp 0.4s ease both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    .item-image { aspect-ratio: 3/4; background: var(--cream); overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .item-image img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.5s ease; }
+    .item-image:hover img { transform: scale(1.04); }
+
+    .item-info { display: flex; flex-direction: column; gap: 0.35rem; padding-top: 0.2rem; }
+    .item-category { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--brown-light); }
+    .item-name { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 400; line-height: 1.3; }
+    .item-variant { font-size: 0.73rem; color: var(--brown-light); letter-spacing: 0.06em; }
+
+    .item-actions { display: flex; align-items: center; gap: 1rem; margin-top: auto; padding-top: 1rem; }
+    .qty-control { display: flex; align-items: center; border: 1px solid var(--brown-faint2); }
+    .qty-btn { width: 32px; height: 32px; background: none; border: none; cursor: pointer; color: var(--brown); font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: background var(--transition); }
+    .qty-btn:hover { background: var(--brown-faint); }
+    .qty-value { width: 38px; text-align: center; font-size: 0.82rem; border-left: 1px solid var(--brown-faint2); border-right: 1px solid var(--brown-faint2); line-height: 32px; }
+    .btn-remove { background: none; border: none; cursor: pointer; font-size: 0.7rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brown-light); text-decoration: underline; text-underline-offset: 3px; transition: color var(--transition); padding: 0; }
+    .btn-remove:hover { color: var(--brown); }
+
+    .item-price-col { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; padding-top: 0.2rem; padding-bottom: 0.2rem; }
+    .item-price { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 600; }
+    .item-price-unit { font-size: 0.7rem; color: var(--brown-light); letter-spacing: 0.08em; }
+
+    .promo-row { display: flex; align-items: center; gap: 0.8rem; padding: 1.6rem 0; border-bottom: 1px solid var(--brown-faint2); }
+    .promo-input { flex: 1; border: 1px solid var(--brown-faint2); background: transparent; font-family: 'Jost', sans-serif; font-size: 0.8rem; letter-spacing: 0.1em; color: var(--brown); padding: 0.7rem 1rem; outline: none; transition: border-color var(--transition); }
+    .promo-input::placeholder { color: var(--brown-light); opacity: 0.6; }
+    .promo-input:focus { border-color: var(--brown); }
+    .btn-promo { font-family: 'Jost', sans-serif; font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; padding: 0.7rem 1.4rem; background: transparent; color: var(--brown); border: 1px solid var(--brown-faint2); cursor: pointer; transition: all var(--transition); white-space: nowrap; }
+    .btn-promo:hover { border-color: var(--brown); }
+
+    .btn-back { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.8rem; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--brown-light); text-decoration: none; transition: color var(--transition); }
+    .btn-back:hover { color: var(--brown); }
+
+    .cart-summary { padding-left: 3rem; padding-top: 2rem; padding-bottom: 4rem; position: sticky; top: 88px; }
+    .summary-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 400; margin-bottom: 2rem; padding-bottom: 1.2rem; border-bottom: 1px solid var(--brown-faint2); }
+    .summary-line { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; letter-spacing: 0.06em; margin-bottom: 1rem; color: var(--brown-light); }
+    .summary-line strong { font-weight: 400; color: var(--brown); }
+    .summary-line.total { margin-top: 1.6rem; padding-top: 1.4rem; border-top: 1px solid var(--brown-faint2); font-size: 0.85rem; color: var(--brown); margin-bottom: 0; }
+    .summary-line.total .total-price { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 600; }
+    .summary-line.saving { font-style: italic; font-size: 0.73rem; }
+    .summary-note { font-size: 0.7rem; letter-spacing: 0.08em; color: var(--brown-light); text-align: center; margin-top: 1rem; line-height: 1.7; }
+
+    .shipping-options { margin: 1.8rem 0; display: flex; flex-direction: column; gap: 0.6rem; }
+    .shipping-opt { display: flex; align-items: center; justify-content: space-between; padding: 0.85rem 1rem; border: 1px solid var(--brown-faint2); cursor: pointer; transition: border-color var(--transition), background var(--transition); }
+    .shipping-opt.selected { border-color: var(--brown); background: var(--brown-faint); }
+    .shipping-opt-left { display: flex; align-items: center; gap: 0.8rem; }
+    .shipping-radio { width: 14px; height: 14px; border: 1px solid var(--brown-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .shipping-opt.selected .shipping-radio { border-color: var(--brown); }
+    .shipping-radio-dot { width: 6px; height: 6px; background: var(--brown); border-radius: 50%; opacity: 0; transition: opacity var(--transition); }
+    .shipping-opt.selected .shipping-radio-dot { opacity: 1; }
+    .shipping-label { font-size: 0.78rem; letter-spacing: 0.06em; color: var(--brown); }
+    .shipping-label small { display: block; font-size: 0.65rem; color: var(--brown-light); margin-top: 1px; }
+    .shipping-price { font-size: 0.78rem; font-weight: 500; }
+    .shipping-price.free { color: var(--brown-light); font-style: italic; font-weight: 300; }
+
+    .btn-checkout { width: 100%; font-family: 'Jost', sans-serif; font-size: 0.78rem; letter-spacing: 0.2em; text-transform: uppercase; padding: 1.1rem; background: var(--brown); color: var(--off-white); border: 1px solid var(--brown); cursor: pointer; transition: all var(--transition); margin-top: 1.8rem; display: flex; align-items: center; justify-content: center; gap: 0.8rem; text-decoration: none; }
+    .btn-checkout:hover { background: transparent; color: var(--brown); }
+
+    .trust-badges { display: flex; justify-content: center; gap: 2rem; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--brown-faint2); }
+    .trust-item { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--brown-light); text-align: center; }
+
+    .info-strip { background: var(--cream); border-top: 1px solid var(--brown-faint2); border-bottom: 1px solid var(--brown-faint2); display: flex; align-items: center; justify-content: center; }
+    .info-strip-item { display: flex; align-items: center; gap: 0.7rem; padding: 1.4rem 2.5rem; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--brown-light); border-right: 1px solid var(--brown-faint2); }
+    .info-strip-item:last-child { border-right: none; }
+
+    footer { background: var(--brown); color: var(--cream); padding: 2.5rem 4rem; display: flex; align-items: center; justify-content: space-between; gap: 2rem; flex-wrap: wrap; }
+    .footer-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; font-weight: 600; letter-spacing: 0.08em; }
+    .footer-note { font-size: 0.73rem; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.5; }
+
+    @media (max-width: 900px) {
+      nav, footer { padding: 0 1.5rem; }
+      .nav-links { display: none; }
+      .page-wrap { padding: 0 1.5rem; }
+      .cart-layout { grid-template-columns: 1fr; }
+      .cart-items { border-right: none; padding-right: 0; }
+      .cart-summary { padding-left: 0; padding-top: 0; border-top: 1px solid var(--brown-faint2); position: static; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+  NAV
+══════════════════════════════════════════ -->
+<nav>
+  <a href="#" class="nav-logo">"nom du site"</a>
+  <ul class="nav-links">
+    <li><a href="url accueil">Accueil</a></li>
+    <li><a href="url boutique">Boutique</a></li>
+    <li><a href="url collections">Collections</a></li>
+    <li><a href="url contact">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-icon-btn">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+    </button>
+    <button class="nav-icon-btn">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.4" viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span class="cart-badge">"nombre d'articles"</span>
+    </button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="url accueil">Accueil</a>
+    <span class="sep">›</span>
+    <a href="url boutique">Boutique</a>
+    <span class="sep">›</span>
+    <span style="color:var(--brown)">Panier</span>
+  </div>
+
+  <!-- EN-TÊTE PANIER -->
+  <div class="cart-header">
+    <h1>Mon Panier</h1>
+    <span class="cart-header-meta">"nombre d'articles" articles</span>
+  </div>
+
+  <div class="cart-layout">
+
+    <!-- ══════════════════════════════════════════
+      GAUCHE — LISTE DES ARTICLES
+      Flask : {% for item in cart_items %} ... {% endfor %}
+    ══════════════════════════════════════════ -->
+    <div class="cart-items">
+
+      <!-- Étapes de commande -->
+      <div class="steps">
+        <div class="step active"><div class="step-num">1</div>Panier</div>
+        <span class="step-arrow">→</span>
+        <div class="step"><div class="step-num">2</div>Livraison</div>
+        <span class="step-arrow">→</span>
+        <div class="step"><div class="step-num">3</div>Paiement</div>
+      </div>
+
+      <!-- ─── UN ARTICLE ─────────────────────────
+        Répéter ce bloc pour chaque article du panier.
+        data-unit-price = prix unitaire pour le calcul JS
+      ──────────────────────────────────────────── -->
+      <div class="cart-item" data-unit-price="prix unitaire">
+
+        <div class="item-image">
+          <img src="chemin image article" alt="nom article"/>
+        </div>
+
+        <div class="item-info">
+          <span class="item-category">"catégorie"</span>
+          <h2 class="item-name">"nom de l'article"</h2>
+          <span class="item-variant">"variante / option choisie"</span>
+
+          <div class="item-actions">
+            <div class="qty-control">
+              <button class="qty-btn qty-minus">−</button>
+              <span class="qty-value">"quantité"</span>
+              <button class="qty-btn qty-plus">+</button>
+            </div>
+            <button class="btn-remove">Supprimer</button>
+          </div>
+        </div>
+
+        <div class="item-price-col">
+          <span class="item-price">"prix total ligne"</span>
+          <span class="item-price-unit">"prix unitaire"</span>
+        </div>
+
+      </div>
+      <!-- ─── FIN ARTICLE ─── -->
+
+      <!-- Code promo -->
+      <div class="promo-row">
+        <input class="promo-input" type="text" placeholder="Code promotionnel"/>
+        <button class="btn-promo">Appliquer</button>
+      </div>
+
+      <a href="url boutique" class="btn-back">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 5 5 12 12 19"/></svg>
+        Continuer mes achats
+      </a>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════
+      DROITE — RÉCAPITULATIF
+    ══════════════════════════════════════════ -->
+    <div class="cart-summary">
+      <h2 class="summary-title">Récapitulatif</h2>
+
+      <div class="summary-line">
+        <span>Sous-total</span>
+        <strong>"sous-total"</strong>
+      </div>
+
+      <div class="summary-line saving">
+        <span>Réduction</span>
+        <strong>"montant réduit si code promo"</strong>
+      </div>
+
+      <div class="summary-line">
+        <span>Livraison</span>
+        <strong>"coût livraison ou Offerte"</strong>
+      </div>
+
+      <!-- Options livraison -->
+      <div class="shipping-options">
+        <div class="shipping-opt selected" data-price="0" onclick="selectShipping(this)">
+          <div class="shipping-opt-left">
+            <div class="shipping-radio"><div class="shipping-radio-dot"></div></div>
+            <div class="shipping-label">Standard <small>5 – 7 jours ouvrés</small></div>
+          </div>
+          <span class="shipping-price free">Offerte</span>
+        </div>
+        <div class="shipping-opt" data-price="0" onclick="selectShipping(this)">
+          <div class="shipping-opt-left">
+            <div class="shipping-radio"><div class="shipping-radio-dot"></div></div>
+            <div class="shipping-label">Express <small>2 – 3 jours ouvrés</small></div>
+          </div>
+          <span class="shipping-price">0 €</span>
+        </div>
+        <div class="shipping-opt" data-price="0" onclick="selectShipping(this)">
+          <div class="shipping-opt-left">
+            <div class="shipping-radio"><div class="shipping-radio-dot"></div></div>
+            <div class="shipping-label">24h Chrono <small>Lendemain avant 13h</small></div>
+          </div>
+          <span class="shipping-price">0 €</span>
+        </div>
+      </div>
+
+      <div class="summary-line total">
+        <span>Total TTC</span>
+        <span class="total-price">"total final"</span>
+      </div>
+
+      <a href="url page checkout / paiement" class="btn-checkout">
+        Commander
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+
+      <p class="summary-note">Paiement 100 % sécurisé<br/>CB · Virement · PayPal</p>
+
+      <div class="trust-badges">
+        <div class="trust-item">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Sécurisé
+        </div>
+        <div class="trust-item">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          Suivi offert
+        </div>
+        <div class="trust-item">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+          Retours 30j
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- INFO STRIP -->
+<div class="info-strip">
+  <div class="info-strip-item">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+    Livraison offerte dès 150 €
+  </div>
+  <div class="info-strip-item">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+    Retours gratuits 30 jours
+  </div>
+  <div class="info-strip-item">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    Paiement sécurisé
+  </div>
+  <div class="info-strip-item">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.3" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.14 1.22 2 2 0 012.11 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 7.09a16 16 0 006 6l.45-.45a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92v2z"/></svg>
+    Support 7j/7
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">"nom du site"</div>
+  <div class="footer-note">© "année" — Tous droits réservés</div>
+</footer>
+
+<script>
+  function selectShipping(el) {
+    document.querySelectorAll('.shipping-opt').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  document.querySelectorAll('.cart-item').forEach(item => {
+    const minus   = item.querySelector('.qty-minus');
+    const plus    = item.querySelector('.qty-plus');
+    const val     = item.querySelector('.qty-value');
+    const priceEl = item.querySelector('.item-price');
+    const unit    = parseFloat(item.dataset.unitPrice) || 0;
+
+    minus.addEventListener('click', () => {
+      let q = parseInt(val.textContent);
+      if (q > 1) { val.textContent = --q; priceEl.textContent = (unit * q).toFixed(2) + ' €'; }
+    });
+    plus.addEventListener('click', () => {
+      let q = parseInt(val.textContent);
+      val.textContent = ++q;
+      priceEl.textContent = (unit * q).toFixed(2) + ' €';
+    });
+  });
+
+  document.querySelectorAll('.btn-remove').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const row = btn.closest('.cart-item');
+      row.style.transition = 'opacity 0.3s, transform 0.3s';
+      row.style.opacity = '0';
+      row.style.transform = 'translateX(12px)';
+      setTimeout(() => row.remove(), 300);
+    });
+  });
+</script>
+
+</body>
+</html>
