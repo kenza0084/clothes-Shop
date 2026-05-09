@@ -1,0 +1,19 @@
+{
+  "products": [
+    { "Name": "Robe Noir", "Category": "Robe", "Description": "Robe noir mi-longue", "Price": 60, "img": "Photo/RobeNoir.webp" },
+    { "Name": "Robe Florale", "Category": "Robe", "Description": "Robe a imprime floral, col V, manches courtes", "Price": 55, "img": "Photo/Robe Florale.jpg" },
+    { "Name": "Blazer Beige", "Category": "Veste", "Description": "Blazer oversize beige, coupe decontractee", "Price": 89, "img": "Photo/Blazer Beige.jpg" },
+    { "Name": "Jean Slim Bleu", "Category": "Pantalon", "Description": "Jean slim taille basse, bleu delave", "Price": 65, "img": "Photo/Jean Slim Bleu.avif" },
+    { "Name": "Top Blanc", "Category": "Haut", "Description": "Top en coton blanc, col bateau", "Price": 29, "img": "Photo/TopBlanc.jpg" },
+    { "Name": "Jupe Midi Camel", "Category": "Jupe", "Description": "Jupe midi en satin camel, fendue", "Price": 48, "img": "Photo/Jupe Midi Camel.webp" },
+    { "Name": "Manteau Gris", "Category": "Manteau", "Description": "Manteau long en laine gris chine", "Price": 145, "img": "Photo/Manteau Gris.avif" },
+    { "Name": "Robe Longue Blanche", "Category": "Robe", "Description": "Robe longue en voile blanc, bretelles fines", "Price": 72, "img": "Photo/Robe Longue Blanche.jpg" },
+    { "Name": "Pull Vert Sauge", "Category": "Haut", "Description": "Pull en maille douce, vert sauge", "Price": 58, "img": "Photo/Pull Vert Sauge.webp" },
+    { "Name": "Chemise Rayee", "Category": "Haut", "Description": "Chemise a rayures bleues et blanches", "Price": 38, "img": "Photo/Chemise Rayee.jpg" },
+    { "Name": "Robe Velours Bordeaux", "Category": "Robe", "Description": "Robe courte en velours bordeaux, col carre", "Price": 79, "img": "Photo/Robe Velours Bordeaux.jpg" },
+    { "Name": "Veste en Jean", "Category": "Veste", "Description": "Veste en jean delave, coupe droite", "Price": 69, "img": "Photo/Veste en Jean.jpg" },
+    { "Name": "Jupe Rose", "Category": "Jupe", "Description": "Mini jupes courtes en satin soyeux", "Price": 39, "img": "Photo/Jupe Rose.jpg" },
+    { "Name": "Combinaison Noire", "Category": "Combinaison", "Description": "Combinaison pantalon noire, sans manches", "Price": 85, "img": "Photo/Combinaison Noire.webp" },
+    { "Name": "Cardigan Creme", "Category": "Haut", "Description": "Cardigan long en laine creme, boutons dores", "Price": 62, "img": "Photo/Cardigan Creme.webp" }
+  ]
+}
