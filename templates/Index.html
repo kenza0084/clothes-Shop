@@ -1,4 +1,329 @@
-{% extends "base.html" %}
+{% extends "Base.html" %}
+
+{% block title %}Maison — Mode Féminine{% endblock %}
+{% block active_home %}active{% endblock %}
+
+{% block extra_styles %}
+  <style>
+    /* ── SECTION HERO ── */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: calc(100vh - 72px);
+    }
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 7rem 5rem 7rem 6rem;
+      position: relative;
+      background: var(--off-white);
+    }
+    .hero-eyebrow {
+      font-size: 0.68rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--brown-light);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      opacity: 0;
+      animation: slideUp 0.9s 0.1s ease forwards;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--brown-light);
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 6vw, 6rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      color: var(--brown);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: slideUp 0.9s 0.25s ease forwards;
+    }
+    .hero-title em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--brown-mid);
+    }
+    .hero-subtitle {
+      font-size: 0.85rem;
+      line-height: 1.85;
+      color: var(--brown-light);
+      max-width: 380px;
+      margin-bottom: 3.5rem;
+      font-weight: 300;
+      opacity: 0;
+      animation: slideUp 0.9s 0.4s ease forwards;
+    }
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      opacity: 0;
+      animation: slideUp 0.9s 0.55s ease forwards;
+    }
+    .btn-primary {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.73rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 1rem 2.4rem;
+      background: var(--brown);
+      color: var(--off-white);
+      border: 1px solid var(--brown);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all var(--transition);
+      display: inline-block;
+    }
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--brown);
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--brown-light);
+      opacity: 0;
+      animation: fadeIn 1s 1.2s ease forwards;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: var(--brown-faint2);
+      position: relative;
+      overflow: hidden;
+    }
+    .scroll-line::after {
+      content: '';
+      position: absolute;
+      top: -100%; left: 0; width: 100%; height: 100%;
+      background: var(--brown-light);
+      animation: scrollDown 2s 1.5s ease-in-out infinite;
+    }
+    @keyframes scrollDown {
+      0%   { top: -100%; }
+      100% { top: 100%; }
+    }
+    .hero-right {
+      position: relative;
+      background: var(--cream);
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeIn 1.1s 0.1s ease forwards;
+    }
+    .hero-right-inner {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-img-badge {
+      position: absolute;
+      bottom: 3rem; left: 3rem;
+      background: var(--off-white);
+      padding: 1.2rem 1.8rem;
+      z-index: 2;
+      opacity: 0;
+      animation: slideUp 0.8s 0.8s ease forwards;
+    }
+    .hero-img-badge-label {
+      font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--brown-light); margin-bottom: 0.3rem;
+    }
+    .hero-img-badge-text {
+      font-family: 'Cormorant Garamond', serif; font-size: 1.05rem; font-weight: 600; color: var(--brown);
+    }
+
+    /* ── TEXTE DEFILANT (MARQUEE) ── */
+    .marquee-strip {
+      border-top: 1px solid var(--brown-faint2);
+      border-bottom: 1px solid var(--brown-faint2);
+      padding: 1rem 0;
+      background: var(--off-white);
+      overflow: hidden;
+      display: flex;
+    }
+    .marquee-inner {
+      display: flex; gap: 3rem;
+      animation: marqueeScroll 22s linear infinite;
+      white-space: nowrap; min-width: max-content;
+    }
+    .marquee-item {
+      font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.9rem; letter-spacing: 0.08em; color: var(--brown-light); display: flex; align-items: center; gap: 3rem;
+    }
+    .marquee-dot { width: 4px; height: 4px; background: var(--brown-faint2); border-radius: 50%; display: inline-block; }
+    @keyframes marqueeScroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    /* ── ENTÊTE DE SECTIONS ── */
+    .section-title-wrap {
+      display: flex; align-items: flex-end; justify-content: space-between; padding: 5rem 6rem 3rem; border-bottom: 1px solid var(--brown-faint2);
+    }
+    .section-tag {
+      font-size: 0.65rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--brown-light); margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.8rem;
+    }
+    .section-tag::before { content: ''; display: block; width: 24px; height: 1px; background: var(--brown-light); }
+    .section-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.2rem, 3.5vw, 3.2rem); font-weight: 300; line-height: 1.1; }
+    .section-title em { font-style: italic; color: var(--brown-mid); }
+    .section-link { font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--brown-light); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; transition: color var(--transition); margin-bottom: 0.4rem; }
+    .section-link:hover { color: var(--brown); }
+    .section-link span { display: inline-block; transition: transform var(--transition); }
+    .section-link:hover span { transform: translateX(4px); }
+
+    /* ── GRILLE PRODUITS PHARES ── */
+    .featured-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .feat-card { position: relative; overflow: hidden; cursor: pointer; border-right: 1px solid var(--brown-faint2); border-bottom: 1px solid var(--brown-faint2); }
+    .feat-card:last-of-type { border-right: none; }
+    .feat-img { width: 100%; aspect-ratio: 3/4; background: var(--cream); overflow: hidden; position: relative; }
+    .feat-body { padding: 1.4rem 1.6rem 1.8rem; background: var(--off-white); }
+    .feat-cat { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--brown-light); margin-bottom: 0.35rem; }
+    .feat-name { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-weight: 400; margin-bottom: 0.4rem; color: var(--brown); }
+    .feat-price { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; }
+    .feat-add { font-family: 'Jost', sans-serif; font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; padding: 0.55rem 1.1rem; background: var(--brown); color: var(--off-white); border: 1px solid var(--brown); cursor: pointer; transition: all var(--transition); margin-top: 0.8rem; }
+    .feat-card:hover .feat-img img { transform: scale(1.05); }
+    .feat-add:hover { background: transparent; color: var(--brown); }
+
+    /* ── SECTION ÉDITORIALE ── */
+    .editorial { display: grid; grid-template-columns: 1fr 1fr; min-height: 500px; border-top: 1px solid var(--brown-faint2); }
+    .editorial-img { background: var(--cream); position: relative; overflow: hidden; }
+    .editorial-content { display: flex; flex-direction: column; justify-content: center; padding: 6rem; border-left: 1px solid var(--brown-faint2); }
+    .editorial-number { font-family: 'Cormorant Garamond', serif; font-size: 5rem; font-weight: 300; color: var(--brown-faint2); line-height: 1; margin-bottom: 1.5rem; letter-spacing: -0.04em; }
+    .editorial-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.8rem, 2.8vw, 2.8rem); font-weight: 300; line-height: 1.2; margin-bottom: 1.5rem; }
+    .editorial-title em { font-style: italic; color: var(--brown-mid); }
+    .editorial-text { font-size: 0.82rem; line-height: 1.9; color: var(--brown-light); max-width: 400px; margin-bottom: 2.5rem; }
+
+    /* Animations locales */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    @media (max-width: 1024px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-right { height: 60vw; }
+      .featured-grid { grid-template-columns: 1fr; }
+      .editorial { grid-template-columns: 1fr; }
+      .editorial-content { padding: 4rem; }
+    }
+    @media (max-width: 768px) {
+      .hero-left { padding: 4rem 1.5rem; }
+      .hero-scroll { display: none; }
+      .section-title-wrap { padding: 3rem 1.5rem 2rem; flex-direction: column; align-items: flex-start; gap: 1rem; }
+      .editorial-content { padding: 2.5rem 1.5rem; }
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
-<div><p>this is index test </p></div>
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-eyebrow">Collection Printemps 2025</p>
+    <h1 class="hero-title">L'élégance<br/>dans sa forme<br/><em>la plus pure</em></h1>
+    <p class="hero-subtitle">Des pièces conçues pour durer. Une mode féminine pensée entre raffinement et légèreté, pour chaque instant de votre vie.</p>
+    <div class="hero-ctas">
+      <a href="/shop" class="btn-primary">Découvrir la boutique</a>
+    </div>
+    <div class="hero-scroll"><div class="scroll-line"></div>Défiler</div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-right-inner">
+      <img src="{{ url_for('static', filename='Photo/2.png') }}" alt="Hero Image" style="width:100%;height:100%;object-fit:cover;display:block;">
+    </div>
+    <div class="hero-img-badge">
+      <p class="hero-img-badge-label">Nouvelle arrivée</p>
+      <p class="hero-img-badge-text">Robe Velours Bordeaux — 79 €</p>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-strip" aria-hidden="true">
+  <div class="marquee-inner">
+    {% for i in range(2) %}
+    <span class="marquee-item">Nouvelle collection <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Mode féminine <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Livraison offerte dès 150 € <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Pièces intemporelles <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Matières naturelles <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Printemps 2025 <span class="marquee-dot"></span></span>
+    {% endfor %}
+  </div>
+</div>
+
+<section>
+  <div class="section-title-wrap reveal">
+    <div>
+      <p class="section-tag">Sélection</p>
+      <h2 class="section-title">Pièces <em>coup de cœur</em></h2>
+    </div>
+    <a href="/shop" class="section-link">Voir tout <span>→</span></a>
+  </div>
+
+  <div class="featured-grid">
+    <div class="feat-card reveal">
+      <div class="feat-img">
+        <img src="{{ url_for('static', filename='Photo/Manteau Gris.avif') }}" alt="Manteau Gris" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.65s cubic-bezier(0.4,0,0.2,1);">
+      </div>
+      <div class="feat-body">
+        <p class="feat-cat">Manteau</p>
+        <h3 class="feat-name">Manteau Gris</h3>
+        <p class="feat-price">145 €</p>
+        <button class="feat-add">Ajouter au panier</button>
+      </div>
+    </div>
+
+    <div class="feat-card reveal" style="animation-delay:0.1s">
+      <div class="feat-img">
+        <img src="{{ url_for('static', filename='Photo/Blazer Beige.jpg') }}" alt="Blazer Beige" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.65s cubic-bezier(0.4,0,0.2,1);">
+      </div>
+      <div class="feat-body">
+        <p class="feat-cat">Veste</p>
+        <h3 class="feat-name">Blazer Beige</h3>
+        <p class="feat-price">89 €</p>
+        <button class="feat-add">Ajouter au panier</button>
+      </div>
+    </div>
+
+    <div class="feat-card reveal" style="animation-delay:0.18s">
+      <div class="feat-img">
+        <img src="{{ url_for('static', filename='Photo/Robe Velours Bordeaux.jpg') }}" alt="Robe Velours Bordeaux" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform 0.65s cubic-bezier(0.4,0,0.2,1);">
+      </div>
+      <div class="feat-body">
+        <p class="feat-cat">Robe</p>
+        <h3 class="feat-name">Robe Velours Bordeaux</h3>
+        <p class="feat-price">79 €</p>
+        <button class="feat-add">Ajouter au panier</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="editorial">
+  <div class="editorial-img">
+    <img src="{{ url_for('static', filename='Photo/1.webp') }}" alt="Editorial Image" style="width:100%;height:100%;object-fit:cover;display:block;">
+  </div>
+  <div class="editorial-content reveal">
+    <p class="editorial-number">01</p>
+    <h2 class="editorial-title">Façonnée pour<br/><em>les femmes d'aujourd'hui</em></h2>
+    <p class="editorial-text">Chaque pièce de notre collection est pensée avec soin — des matières choisies pour leur douceur, des coupes étudiées pour mettre en valeur la silhouette. Une mode qui respecte autant celle qui la porte que l'environnement.</p>
+    <a href="/shop" class="btn-primary" style="align-self:flex-start;">Explorer la collection</a>
+  </div>
+</section>
 {% endblock %}

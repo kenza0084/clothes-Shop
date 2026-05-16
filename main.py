@@ -7,6 +7,9 @@ app = Flask(__name__)
 def index():
     return render_template("Index.html" )
 
+@app.route("/Panier")
+def Panier():
+    return render_template("Panier.html" )
 
 @app.route("/shop")
 def shop():
