@@ -34,4 +34,4 @@ def traitement():
     description = request.form['Description']
     price = request.form['Price']
     image = request.form['Image']
-    return f"Bonjour {nom},{category},{description},{price},{image} ,données reçues avec succès !"
+    return f"Bonjour {nom},{category},{description},{price} ,données reçues avec succès !"
