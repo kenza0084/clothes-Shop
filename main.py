@@ -20,3 +20,18 @@ def loadproducts():
     with open("database.json") as f: 
         data=json.load(f)
         return data["products"]
+
+@app.route('/admin')
+def formulaire():
+    return render_template('Admin.html')
+
+# Reçoit et traite les données du form  ulaire
+@app.route('/traitement', methods=['POST'])
+def traitement():
+    # Récupère la donnée du champ 'nom'
+    nom = request.form['Name']
+    category = request.form['Category']
+    description = request.form['Description']
+    price = request.form['Price']
+    image = request.form['Image']
+    return f"Bonjour {nom},{category},{description},{price},{image} ,données reçues avec succès !"

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mon Formulaire Flask</title>
+</head>
+<body>
+    <h2>Entrez votre nom</h2>
+    <!-- La méthode POST est utilisée pour envoyer des données sécurisées au serveur -->
+    <form action="/traitement" method="POST">
+        <label for="champ_Name">Name: </label>
+        <input type="text" id="champ_nom" name="Name" required>
+        <label for="champ_category">category: </label>
+        <input type="text" id="champ_category" name="Category" required>
+         <label for="champ_description">description: </label>
+        <input type="text" id="champ_description" name="Description" required>
+        <label for="champ_description">price: </label>
+        <input type="number" id="champ_price" name="Price" required>
+        <label for="champ_description">image: </label>
+        <input type="text" id="champ_image" name="Image" required>
+        
+        <button type="submit">Envoyer</button>
+    </form>
+</body>
+</html>
